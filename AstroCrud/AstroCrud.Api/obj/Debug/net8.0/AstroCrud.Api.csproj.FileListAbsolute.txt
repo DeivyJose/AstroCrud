@@ -125,3 +125,4 @@
 /home/one-percent/Documentos/AstroCrud/AstroCrud/AstroCrud.Api/obj/Debug/net8.0/AstroCrud.Api.pdb
 /home/one-percent/Documentos/AstroCrud/AstroCrud/AstroCrud.Api/obj/Debug/net8.0/AstroCrud.Api.genruntimeconfig.cache
 /home/one-percent/Documentos/AstroCrud/AstroCrud/AstroCrud.Api/obj/Debug/net8.0/ref/AstroCrud.Api.dll
+/home/one-percent/Documentos/AstroCrud/AstroCrud/AstroCrud.Api/obj/Debug/net8.0/AstroCrud.Api.sourcelink.json
