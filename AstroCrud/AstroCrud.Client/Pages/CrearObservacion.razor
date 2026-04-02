@@ -1,0 +1,69 @@
+@page "/crear-observacion"
+@using AstroCrud.Client.Models
+@inject AstroCrud.Client.Services.ObservacionApiService ObservacionService
+@inject NavigationManager Navigation
+
+<PageTitle>Crear observación</PageTitle>
+
+<h2>Nueva observación</h2>
+
+<EditForm Model="modelo" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <InputText class="form-control" @bind-Value="modelo.Titulo" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Objeto celeste</label>
+        <InputText class="form-control" @bind-Value="modelo.ObjetoCeleste" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de observación</label>
+        <InputDate class="form-control" @bind-Value="modelo.FechaObservacion" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ubicación</label>
+        <InputText class="form-control" @bind-Value="modelo.Ubicacion" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <InputText class="form-control" @bind-Value="modelo.Descripcion" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Telescopio usado</label>
+        <InputText class="form-control" @bind-Value="modelo.TelescopioUsado" />
+    </div>
+
+    <div class="form-check mb-3">
+        <InputCheckbox class="form-check-input" @bind-Value="modelo.EsVisible" />
+        <label class="form-check-label">¿Fue visible claramente?</label>
+    </div>
+
+    <button class="btn btn-success me-2" type="submit">Guardar</button>
+    <button class="btn btn-secondary" type="button" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+@code {
+    private ObservacionAstronomicaDto modelo = new();
+
+    private async Task Guardar()
+    {
+        var ok = await ObservacionService.CreateAsync(modelo);
+        if (ok)
+        {
+            Navigation.NavigateTo("/observaciones");
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/observaciones");
+    }
+}

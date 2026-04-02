@@ -1,0 +1,85 @@
+@page "/observaciones"
+@inject AstroCrud.Client.Services.ObservacionApiService ObservacionService
+@inject NavigationManager Navigation
+
+<PageTitle>Observaciones</PageTitle>
+
+<h2>Lista de observaciones astronómicas</h2>
+
+<button class="btn btn-primary mb-3" @onclick="IrCrear">Nueva observación</button>
+
+@if (cargando)
+{
+    <p>Cargando observaciones...</p>
+}
+else if (observaciones.Count == 0)
+{
+    <p>No hay observaciones registradas.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Objeto</th>
+                <th>Fecha</th>
+                <th>Ubicación</th>
+                <th>Visible</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obs in observaciones)
+            {
+                <tr>
+                    <td>@obs.Titulo</td>
+                    <td>@obs.ObjetoCeleste</td>
+                    <td>@obs.FechaObservacion.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@obs.Ubicacion</td>
+                    <td>@(obs.EsVisible ? "Sí" : "No")</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm me-2" @onclick="() => Editar(obs.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(obs.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<AstroCrud.Client.Models.ObservacionAstronomicaDto> observaciones = new();
+    private bool cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDatos();
+    }
+
+    private async Task CargarDatos()
+    {
+        cargando = true;
+        observaciones = await ObservacionService.GetAllAsync();
+        cargando = false;
+    }
+
+    private void IrCrear()
+    {
+        Navigation.NavigateTo("/crear-observacion");
+    }
+
+    private void Editar(int id)
+    {
+        Navigation.NavigateTo($"/editar-observacion/{id}");
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var ok = await ObservacionService.DeleteAsync(id);
+        if (ok)
+        {
+            await CargarDatos();
+        }
+    }
+}

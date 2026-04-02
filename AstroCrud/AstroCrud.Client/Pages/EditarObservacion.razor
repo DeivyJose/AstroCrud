@@ -1,0 +1,86 @@
+@page "/editar-observacion/{Id:int}"
+@using AstroCrud.Client.Models
+@inject AstroCrud.Client.Services.ObservacionApiService ObservacionService
+@inject NavigationManager Navigation
+
+<PageTitle>Editar observación</PageTitle>
+
+<h2>Editar observación</h2>
+
+@if (modelo is null)
+{
+    <p>Cargando datos...</p>
+}
+else
+{
+    <EditForm Model="modelo" OnValidSubmit="Guardar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Título</label>
+            <InputText class="form-control" @bind-Value="modelo.Titulo" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Objeto celeste</label>
+            <InputText class="form-control" @bind-Value="modelo.ObjetoCeleste" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de observación</label>
+            <InputDate class="form-control" @bind-Value="modelo.FechaObservacion" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ubicación</label>
+            <InputText class="form-control" @bind-Value="modelo.Ubicacion" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <InputText class="form-control" @bind-Value="modelo.Descripcion" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Telescopio usado</label>
+            <InputText class="form-control" @bind-Value="modelo.TelescopioUsado" />
+        </div>
+
+        <div class="form-check mb-3">
+            <InputCheckbox class="form-check-input" @bind-Value="modelo.EsVisible" />
+            <label class="form-check-label">¿Fue visible claramente?</label>
+        </div>
+
+        <button class="btn btn-primary me-2" type="submit">Actualizar</button>
+        <button class="btn btn-secondary" type="button" @onclick="Cancelar">Cancelar</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private ObservacionAstronomicaDto? modelo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelo = await ObservacionService.GetByIdAsync(Id);
+    }
+
+    private async Task Guardar()
+    {
+        if (modelo is null) return;
+
+        var ok = await ObservacionService.UpdateAsync(Id, modelo);
+        if (ok)
+        {
+            Navigation.NavigateTo("/observaciones");
+        }
+    }
+
+    private void Cancelar()
+    {
+        Navigation.NavigateTo("/observaciones");
+    }
+}
